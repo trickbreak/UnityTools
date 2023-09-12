@@ -1,0 +1,19 @@
+{
+  "name": "com.trickbreak.singleton",
+  "displayName": "Singleton",
+  "version": "0.0.1",
+  "unity": "2022.3",
+  "description": "Provides singleton patterns for general classes, monobehavior classes, and scriptable objects.",
+  "dependencies": 
+  {
+    "com.unity.addressables": "1.0.0"
+  },
+  "repository": {
+    "url": "",
+    "type": "git",
+    "revision": ""
+  },
+  "author": {
+    "name": "Trickbreak"
+  }
+}
