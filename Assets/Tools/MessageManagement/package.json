@@ -1,0 +1,16 @@
+{
+  "name": "com.trickbreak.messagemanagement",
+  "displayName": "Message Management",
+  "version": "0.0.1",
+  "unity": "2022.3",
+  "description": "It is a message system that improved unity's sendmeaage.",
+  "dependencies": {},
+  "repository": {
+    "url": "",
+    "type": "git",
+    "revision": ""
+  },
+  "author": {
+    "name": "Trickbreak"
+  }
+}
