@@ -15,3 +15,7 @@
 
 ### AddressableUtility
 - URL : https://github.com/trickbreak/UnityTools.git?path=/Assets/Tools/AddressableUtility
+
+### MessageManagement
+- URL : https://github.com/trickbreak/UnityTools.git?path=/Assets/Tools/MessageManagement
+
