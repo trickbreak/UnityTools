@@ -11,7 +11,7 @@ namespace Trickbreak.AddressableUtility
         }
     }
 
-    public static class AddressableAssetsMaker
+    public static class AddressableMaker
     {
         public static GameObject Make(string key, Transform parent = null)
         {

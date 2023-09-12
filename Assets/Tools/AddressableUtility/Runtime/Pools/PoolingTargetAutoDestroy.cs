@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Trickbreak.AddressableUtility
 {
-    public class PoolableAddressableObjectAutoDestroy : PoolableAddressableObject
+    public class PoolingTargetAutoDestroy : PoolingTarget
     {
         [SerializeField]
         private float destroyTime = 1.0f;
