@@ -11,55 +11,46 @@ namespace Trickbreak.CoroutineScheduler
         
         private Coroutine runningCoroutine = null;
 
-        private List<Schedule> schedules = new();
+        private List<ScheduleBase> schedules = new();
 
 
 
         public bool IsRunnig => runningCoroutine != null;
         
         
-        
-        public Scheduler(MonoBehaviour target)
+
+        /// <summary>
+        /// 스케줄을 만들기전 우선순위를 계산 합니다.
+        /// value 값이 null인 경우 스케줄의 가장 마지막 우선순위를 부여 합니다.
+        /// </summary>
+        private int PriorityCalculate(int? value)
         {
-            this.target = target;
+            if (value != null)
+            {
+                return value.Value;
+            }
+
+            if (schedules.Count > 0)
+            {
+                return schedules[^1].Priority;
+            }
+
+            return 0;
         }
-        
+
         /// <summary>
         /// 스케줄을 등록 및 실행 합니다.
         /// </summary>
-        /// <param name="work">실행 되는 로직 입니다.</param>
-        /// <param name="tag">삭제시 식별을 위한 값 입니다.</param>
-        /// <param name="priority">스케줄이 등록 되는 우선 순위 입니다. 값을 입력 하지 않으면 가장 마지막에 추가 됩니다.</param>
-        public void StartSchedule(Func<IEnumerator> work, string tag = "noTags", int? priority = null)
+        private void StartSchedule(ScheduleBase schedule)
         {
-            int priorityInt = PriorityConvertToInt(priority);
+            AddSchedule(schedule);
 
-            Schedule newSchedule = new Schedule(tag, priorityInt, work);
-            
-            AddSchedule(newSchedule);
-            
             TrySchedulesStart();
-
-
-
-            // 우선순위 값이 없는 경우 스케줄의 가장 마지막 우선순위를 부여 합니다.
-            int PriorityConvertToInt(int? value)
-            {
-                if (value != null)
-                {
-                    return value.Value;
-                }
-                    
-                if (schedules.Count > 0)
-                {
-                    return schedules[^1].Priority;
-                }
-                    
-                return 0;
-            }
             
+
+
             // 스케줄의 우선순위에 맞춰 리스트에 삽입 합니다.
-            void AddSchedule(Schedule schedule)
+            void AddSchedule(ScheduleBase schedule)
             {
                 // index 0 은 실행중인 스케줄이므로 실행중인 스케줄을 제외 하고 우선 순위를 비교해서 삽입 합니다.
                 for (int i = 1; i < schedules.Count; i++)
@@ -68,12 +59,12 @@ namespace Trickbreak.CoroutineScheduler
                     {
                         schedules.Insert(i, schedule);
                         return;
-                    } 
+                    }
                 }
-                
+
                 schedules.Add(schedule);
             }
-            
+
             // 코루틴이 실행중이 아닌 경우 실행 합니다.
             void TrySchedulesStart()
             {
@@ -81,18 +72,63 @@ namespace Trickbreak.CoroutineScheduler
                 {
                     runningCoroutine = target.StartCoroutine(SchedulesRun());
                 }
-            
+
                 IEnumerator SchedulesRun()
                 {
                     while (schedules.Count > 0)
                     {
-                        yield return schedules[0].Invoke();
-                        schedules.RemoveAt(0);            
+                        if (schedules[0] is ScheduleCoroutine scheduleCoroutine)
+                        {
+                            yield return scheduleCoroutine.Invoke();
+                        }
+                        else if (schedules[0] is ScheduleAction scheduleAction)
+                        {
+                            scheduleAction.Invoke();
+                        }
+
+                        schedules.RemoveAt(0);
                     }
 
                     runningCoroutine = null;
-                }        
+                }
             }
+        }
+
+
+
+        public Scheduler(MonoBehaviour target)
+        {
+            this.target = target;
+        }
+
+        /// <summary>
+        /// 코루틴 타입의 스케줄을 등록 및 실행 합니다.
+        /// </summary>
+        /// <param name="work">실행 되는 로직 입니다.</param>
+        /// <param name="tag">삭제시 식별을 위한 값 입니다.</param>
+        /// <param name="priority">스케줄이 등록 되는 우선 순위 입니다. 값을 입력 하지 않으면 가장 마지막에 추가 됩니다.</param>
+        public void StartSchedule(Func<IEnumerator> work, string tag = "noTags", int? priority = null)
+        {
+            int calculatedPriority = PriorityCalculate(priority);
+
+            ScheduleCoroutine newSchedule = new ScheduleCoroutine(tag, calculatedPriority, work);
+
+            StartSchedule(newSchedule);
+        }
+
+        /// <summary>
+        /// 액션 타입의 스케줄을 등록 및 실행 합니다.
+        /// </summary>
+        /// <param name="work">실행 되는 로직 입니다.</param>
+        /// <param name="tag">삭제시 식별을 위한 값 입니다.</param>
+        /// <param name="priority">스케줄이 등록 되는 우선 순위 입니다. 값을 입력 하지 않으면 가장 마지막에 추가 됩니다.</param>
+        public void StartSchedule(Action work, string tag = "noTags", int? priority = null)
+        {
+            int calculatedPriority = PriorityCalculate(priority);
+
+            ScheduleAction newSchedule = new ScheduleAction(tag, calculatedPriority, work);
+
+            StartSchedule(newSchedule);
         }
 
         /// <summary>
