@@ -5,6 +5,7 @@ namespace Trickbreak.AddressableUtility
 {
     public class PoolingTargetAutoDestroy : PoolingTarget
     {
+        [Header("Etc")]
         [SerializeField]
         private float destroyTime = 1.0f;
 
@@ -16,7 +17,7 @@ namespace Trickbreak.AddressableUtility
         private IEnumerator DelayedDestroy()
         {
             yield return new WaitForSeconds(destroyTime);
-            // this.Release();
+            Release();
         }
     }    
 }
