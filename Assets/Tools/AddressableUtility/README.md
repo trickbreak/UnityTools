@@ -25,12 +25,12 @@ target.Release();
 ```csharp
 public class Bullet : MonoBehaviour
 {
-    private void GetEvent()
+    public void GetEvent()
     {
         Debug.Log("Get!");
     }
     
-    private void ReleaseEvent()
+    public void ReleaseEvent()
     {
         Debug.Log("Release!");
     }
