@@ -37,4 +37,4 @@ public class Bullet : MonoBehaviour
 }
 ```
 
-![sample_001.png](Documentation%7E%2Fsample_001.png)
+![sample_001.png](./Documentation~/sample_001.png)
