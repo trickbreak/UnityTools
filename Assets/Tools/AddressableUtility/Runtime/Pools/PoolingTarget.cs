@@ -14,12 +14,8 @@ namespace Trickbreak.AddressableUtility
         
         public UnityEvent OnReleaseUnityEvent;
         
-        public event Action OnGetEvent;
-
-        public event Action OnReleaseEvent;
         
         
-
         internal void OnCreate(AddressablePool parentPool)
         {
             this.parentPool = parentPool;
@@ -27,13 +23,11 @@ namespace Trickbreak.AddressableUtility
 
         internal void OnGet()
         {
-            OnGetEvent?.Invoke();
             OnGetUnityEvent?.Invoke();
         }
 
         internal void OnRelease()
         {
-            OnReleaseEvent?.Invoke();
             OnReleaseUnityEvent?.Invoke();
         }
 

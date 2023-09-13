@@ -17,32 +17,14 @@ target.Release();
 
 ### PoolingTarget
 - AddressablePools에서 오브젝트를 가져올때 / 돌려줄때 이벤트를 등록할 수 있습니다.
-  - C# 이벤트
-    - OnGetEvent 
-    - OnReleaseEvent
-  - 유니티 이벤트 
-    - OnGetUnityEvent 
-    - OnReleaseUnityEvent
+  - OnGetUnityEvent 
+  - OnReleaseUnityEvent
 
-### PoolingTarget C# 이벤트 샘플 코드
+### PoolingTarget 이벤트 샘플
+
 ```csharp
 public class Bullet : MonoBehaviour
 {
-    PoolingTarget poolingTarget = null;
-
-    private void Start()
-    {
-        poolingTarget = GetComponent<PoolingTarget>();
-        poolingTarget.OnGetEvent += GetEvent;
-        poolingTarget.OnReleaseEvent += ReleaseEvent;
-    }
-    
-    private void OnDestroy()
-    {
-        poolingTarget.OnGetEvent -= GetEvent;
-        poolingTarget.OnReleaseEvent -= ReleaseEvent;
-    }
-    
     private void GetEvent()
     {
         Debug.Log("Get!");
@@ -54,3 +36,5 @@ public class Bullet : MonoBehaviour
     }
 }
 ```
+
+![sample_001.png](Documentation%7E%2Fsample_001.png)
