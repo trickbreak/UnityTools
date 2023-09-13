@@ -24,15 +24,18 @@ namespace Trickbreak.AddressableUtility
             return addressableAsset;
         }
 
-        public static T Make<T>(string key, Transform parent = null)
+        public static TComponent Make<TComponent>(string key, Transform parent = null) where TComponent : Component
         {
-            var addressableAsset = Addressables.InstantiateAsync(key, parent).WaitForCompletion();
-            if (addressableAsset == null)
-                return default;
-        
-            addressableAsset.AddComponent<AutoReleaser>();
-        
-            return addressableAsset.GetComponent<T>();
+            var addressableAsset = Make(key, parent);
+            
+            if (addressableAsset != null)
+            {
+                return addressableAsset.GetComponent<TComponent>();
+            }
+            else
+            {
+                return null;
+            }
         }
     
         public static GameObject Make(AssetReference assetReference, Transform parent = null)
@@ -46,15 +49,17 @@ namespace Trickbreak.AddressableUtility
             return addressableAsset;
         }
     
-        public static T Make<T>(AssetReference assetReference, Transform parent = null)
+        public static TComponent Make<TComponent>(AssetReference assetReference, Transform parent = null) where TComponent : Component
         {
-            var addressableAsset = Addressables.InstantiateAsync(assetReference, parent).WaitForCompletion();
-            if (addressableAsset == null)
-                return default;
-        
-            addressableAsset.AddComponent<AutoReleaser>();
-        
-            return addressableAsset.GetComponent<T>();
+            var addressableAsset = Make(assetReference, parent);
+            if (addressableAsset != null)
+            {
+                return addressableAsset.GetComponent<TComponent>();     
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }
