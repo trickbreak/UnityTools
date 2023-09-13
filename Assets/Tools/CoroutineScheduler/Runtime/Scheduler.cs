@@ -5,53 +5,21 @@ using UnityEngine;
 
 namespace Trickbreak.CoroutineScheduler
 {
-    /// <summary>
-    /// 규칙 1. 우선 순위는 숫자가 클수록 먼저 실행 됩니다.<br/>
-    /// 규칙 2. 우선 순위가 같은 스케줄이 추가 되면, 같은 작업 중 가장 뒤에 추가 됩니다.<br/>
-    /// 규칙 3. 추가 되는 스케줄의 우선 순위가 실행 중인 스케줄의 우선순위 보다 높더라도, 실행 중인 스케줄이 끝난 뒤 실행 됩니다.<br/>
-    /// 규칙 4. 실행중인 스케줄이 없을때 우선순위가 없는 작업이 추가 되면 추가된 작업의 우선순위는 0 입니다.
-    /// </summary>
-    public class CoroutineScheduler
+    public class Scheduler
     {
-        private class Schedule
-        {
-            private Func<IEnumerator> work;
-            
-            public string Tag { get; }
-
-            public int Priority { get; }
-            
-
-            
-            public Schedule(string tag, int priority, Func<IEnumerator> work)
-            {
-                Tag = tag;
-                Priority = priority;
-                this.work = work;
-            }
-
-            public IEnumerator Invoke()
-            {
-                if (work == null)
-                {
-                    yield break;
-                }
-                
-                yield return work.Invoke();
-            }
-        }
-
-        
-        
         private MonoBehaviour target; 
         
         private Coroutine runningCoroutine = null;
 
         private List<Schedule> schedules = new();
+
+
+
+        public bool IsRunnig => runningCoroutine != null;
         
         
         
-        public CoroutineScheduler(MonoBehaviour target)
+        public Scheduler(MonoBehaviour target)
         {
             this.target = target;
         }
@@ -62,7 +30,7 @@ namespace Trickbreak.CoroutineScheduler
         /// <param name="work">실행 되는 로직 입니다.</param>
         /// <param name="tag">삭제시 식별을 위한 값 입니다.</param>
         /// <param name="priority">스케줄이 등록 되는 우선 순위 입니다. 값을 입력 하지 않으면 가장 마지막에 추가 됩니다.</param>
-        public Coroutine StartSchedule(Func<IEnumerator> work, string tag = "noTags", int? priority = null)
+        public void StartSchedule(Func<IEnumerator> work, string tag = "noTags", int? priority = null)
         {
             int priorityInt = PriorityConvertToInt(priority);
 
@@ -71,8 +39,6 @@ namespace Trickbreak.CoroutineScheduler
             AddSchedule(newSchedule);
             
             TrySchedulesStart();
-
-            return runningCoroutine;
 
 
 
@@ -148,6 +114,35 @@ namespace Trickbreak.CoroutineScheduler
                     index++;
                 }
             }
+        }
+
+        /// <summary>
+        /// 진행중인 스케줄까지만 진행 하고, 나머지 모든 스케줄을 제거 합니다.
+        /// </summary>
+        public void AllStop()
+        {
+            if (!IsRunnig)
+            {
+                schedules.Clear();
+            }
+            else
+            {
+                schedules.RemoveRange(1, schedules.Count - 1);
+            }
+        }
+        
+        /// <summary>
+        /// 진행 중인 스케줄을 즉시 멈추고, 모든 스케줄을 제거 합니다.
+        /// </summary>
+        public void AllStopImmediate()
+        {
+            if (runningCoroutine != null)
+            {
+                target.StopCoroutine(runningCoroutine);
+                runningCoroutine = null;
+            }
+            
+            schedules.Clear();
         }
     }
 }

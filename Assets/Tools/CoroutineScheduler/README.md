@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
     }
 }
 
-public class EventManager
+public class EventManager : MonoBehaviour
 {
     [SerializeField]
     private GameManager gameManager;
@@ -80,7 +80,7 @@ public class EventManager
 
 
 
-public class RankingManager
+public class RankingManager : MonoBehaviour
 {
     [SerializeField]
     private GameManager gameManager;
