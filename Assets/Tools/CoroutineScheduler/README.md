@@ -23,7 +23,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public CoroutineScheduler Scheduler { get; private set; }
+    public Scheduler Scheduler { get; private set; }
 
     private void Awake()
     {
