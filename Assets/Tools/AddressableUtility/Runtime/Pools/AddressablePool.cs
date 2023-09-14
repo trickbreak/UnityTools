@@ -23,7 +23,6 @@ namespace Trickbreak.AddressableUtility
             pool = new ObjectPool<PoolingTarget>
             (
                     createFunc:         Create,
-                    actionOnGet:        OnGet,
                     actionOnRelease:    OnRelease,
                     actionOnDestroy:    OnDestroy,
                     maxSize:            maxSize
@@ -54,13 +53,6 @@ namespace Trickbreak.AddressableUtility
 
             poolingTarget.OnCreate(this);
             return poolingTarget;
-        }
-
-        private void OnGet(PoolingTarget poolingTarget)
-        {
-            poolingTarget.gameObject.SetActive(true);
-            poolingTarget.transform.SetParent(null);
-            poolingTarget.OnGet();
         }
 
         private void OnRelease(PoolingTarget poolingTarget)

@@ -10,8 +10,10 @@ namespace Trickbreak.AddressableUtility
 
 
         [Header("Events")]
+        [Tooltip("Get 처리시 오브젝트가 활성화(Active - True)되기 직전에 호출되는 이벤트 입니다.")]
         public UnityEvent OnGetUnityEvent; 
         
+        [Tooltip("Release 처리시 오브젝트가 비활성화(Active - False)되고 바로 호출되는 이벤트 입니다.")]
         public UnityEvent OnReleaseUnityEvent;
         
         
